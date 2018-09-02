@@ -1,15 +1,22 @@
 var express = require("express");
-// var http = require("http");
+var mxx = require("./model");
 
 var app = express();
 var port = 8080;
-// app.set("port", port);
-
-// var server = http.createServer(app);
-// server.listen(port);
 
 app.get("/", (req, res) => {
-	res.send("Hello world 1!");
+	res.send("Hello world!");
 });
 
 app.listen(port);
+
+var router = express.Router();
+
+const foo = function(req, res, next) {
+	res.json(mxx.Foo("Hey!"));
+};
+
+router.route("/foo").
+	get(foo);
+
+app.use("/api/v1", router);
