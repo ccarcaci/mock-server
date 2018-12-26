@@ -1,0 +1,13 @@
+{
+	"movie": "Star Wars",
+	"characters": [
+		{
+			"name": "Chewie",
+			"weapon": "Laser Rifle Gun"
+		},
+		{
+			"name": "Kylo Ren",
+			"weapon": "Laser Sword"
+		}
+	]
+}

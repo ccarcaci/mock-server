@@ -1,22 +1,32 @@
-var express = require("express");
-var mxx = require("./model");
+var http = require("http");
+var https = require("https");
+var fs = require("fs");
+var characters = require("./star-wars.json");
 
-var app = express();
-var port = 8080;
+const httpsOptions = {
+	key: fs.readFileSync(`${__dirname}/certs/privkey.pem`),
+	cert: fs.readFileSync(`${__dirname}/certs/certificate.crt`),
+}
 
-app.get("/", (req, res) => {
-	res.send("Hello world!");
-});
+var httpPort = 8080;
+var httpsPort = 4443;
 
-app.listen(port);
+const routing = (request, response) => {
+	const url = request.url;
 
-var router = express.Router();
+	if(url === "/") {
+		response.writeHead(200, { "Content-Type": "text/plain" });
+		response.write("Try with /characters")
+	} else if(url === "/characters") {
+		response.writeHead(200, { "Content-Type": "application/json" });
+		response.write(JSON.stringify(characters));
+	}
 
-const foo = function(req, res, next) {
-	res.json(mxx.Foo("Hey!"));
-};
+	response.end();
+}
 
-router.route("/foo").
-	get(foo);
+var httpServer = http.createServer((req, res) => routing(req, res));
+var httpsServer = https.createServer(httpsOptions, (req, res) => routing(req, res));
 
-app.use("/api/v1", router);
+httpServer.listen(httpPort, () => { console.log(`HTTP Server on port ${httpPort}`) } );
+httpsServer.listen(httpsPort, () => { console.log(`HTTPS Server on port ${httpsPort}`) });
