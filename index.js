@@ -4,8 +4,8 @@ var fs = require("fs");
 var characters = require("./star-wars.json");
 
 const httpsOptions = {
-	key: fs.readFileSync(`${__dirname}/certs/privkey.pem`),
-	cert: fs.readFileSync(`${__dirname}/certs/certificate.crt`),
+  key: fs.readFileSync(`${__dirname}/certs/privkey.pem`),
+  cert: fs.readFileSync(`${__dirname}/certs/certificate.crt`),
 }
 
 var httpPort = 8080;
