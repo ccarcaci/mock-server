@@ -3,7 +3,7 @@ var https = require("https");
 var fs = require("fs");
 const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
-var characters = require("./star-wars.json");
+var characters = require("./swagger-specs/star-wars.json");
 
 const httpsOptions = {
   key: fs.readFileSync(`${__dirname}/certs/privkey.pem`),
