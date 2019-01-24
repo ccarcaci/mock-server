@@ -1,5 +1,6 @@
 var http = require("http");
 var https = require("https");
+var url = require("url");
 var fs = require("fs");
 const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
@@ -14,17 +15,22 @@ var httpPort = 8080;
 var httpsPort = 4443;
 
 const routing = (request, response) => {
-	const url = request.url;
+  const action = url.parse(request.url);
 
-	if(url === "/") {
+	if(action.pathname === "/") {
 		response.writeHead(200, { "Content-Type": "text/plain" });
 		response.write("Try with /characters")
-	} else if(url === "/characters") {
+	} else if(action.pathname === "/characters") {
 		response.writeHead(200, { "Content-Type": "application/json" });
 		response.write(JSON.stringify(characters));
-	} else if(url === "/demongo") {
+	} else if(action.pathname === "/demongo") {
     response.writeHead(200, { "Content-Type": "application/json" });
     response.write(JSON.stringify(demodata()));
+  } else if(action.pathname === "/parrot") {
+    const content = getUrlParam(action.query.split("&"), "content");
+
+    response.writeHead(200, { "Content-Type": "application/json" });
+    response.write(JSON.stringify(parrot(content)));
   }
 
 	response.end();
@@ -78,8 +84,19 @@ const findDocuments = function(db, callback) {
   collection.find({}).toArray(function(err, docs) {
     assert.equal(err, null);
 
-    console.log("Found the records:");
+    console.log("Records Found:");
     console.log(docs);
     callback(docs);
   });
+}
+
+const getUrlParam = function(rawParams, paramName) {
+  return rawParams.map(rawParam => rawParam.split("=")).
+    find(param => param[0] === paramName)[1];
+}
+
+const parrot = function(content) {
+  return {
+    parrotSays: content
+  }
 }
