@@ -1,98 +1,77 @@
-var http = require("http");
-var https = require("https");
-var url = require("url");
-var fs = require("fs");
-const MongoClient = require("mongodb").MongoClient;
-const assert = require("assert");
-var characters = require("./swagger-specs/star-wars.json");
+var http = require("http")
+var https = require("https")
+var url = require("url")
+var fs = require("fs")
+const MongoClient = require("mongodb").MongoClient
+const assert = require("assert")
+var characters = require("./swagger-specs/star-wars.json")
 
 const httpsOptions = {
   key: fs.readFileSync(`${__dirname}/certs/privkey.pem`),
   cert: fs.readFileSync(`${__dirname}/certs/certificate.crt`),
 }
 
-var httpPort = 8080;
-var httpsPort = 4443;
+var httpPort = 8080
+var httpsPort = 4443
 
 const routing = (request, response) => {
-  const action = url.parse(request.url);
+  const action = url.parse(request.url)
 
 	if(action.pathname === "/") {
-		response.writeHead(200, { "Content-Type": "text/plain" });
-		response.write("Try with /characters")
+		response.writeHead(200, { "Content-Type": "text/plain" })
+    response.write("Try with /characters")
+    response.end()
 	} else if(action.pathname === "/characters") {
-		response.writeHead(200, { "Content-Type": "application/json" });
-		response.write(JSON.stringify(characters));
+		response.writeHead(200, { "Content-Type": "application/json" })
+    response.write(JSON.stringify(characters))
+    response.end()
 	} else if(action.pathname === "/demongo") {
-    response.writeHead(200, { "Content-Type": "application/json" });
-    response.write(JSON.stringify(demodata()));
+    response.writeHead(200, { "Content-Type": "application/json" })
+
+    demodata().then((data) => {
+      response.write(JSON.stringify(data))
+      response.end()
+    }).catch(error =>
+      console.log(error.message))
   } else if(action.pathname === "/parrot") {
-    const content = getUrlParam(action.query.split("&"), "content");
+    const content = getUrlParam(action.query.split("&"), "content")
 
-    response.writeHead(200, { "Content-Type": "application/json" });
-    response.write(JSON.stringify(parrot(content)));
+    response.writeHead(200, { "Content-Type": "application/json" })
+    response.write(JSON.stringify(parrot(content)))
+    response.end()
   }
-
-	response.end();
 }
 
-var httpServer = http.createServer((req, res) => routing(req, res));
-var httpsServer = https.createServer(httpsOptions, (req, res) => routing(req, res));
+var httpServer = http.createServer((req, res) => routing(req, res))
+var httpsServer = https.createServer(httpsOptions, (req, res) => routing(req, res))
 
-httpServer.listen(httpPort, () => { console.log(`HTTP Server on port ${httpPort}`) } );
-httpsServer.listen(httpsPort, () => { console.log(`HTTPS Server on port ${httpsPort}`) });
+httpServer.listen(httpPort, () => { console.log(`HTTP Server on port ${httpPort}`) } )
+httpsServer.listen(httpsPort, () => { console.log(`HTTPS Server on port ${httpsPort}`) })
 
 // Server functions
 
 const demodata = function() {
-  const mongoUrl = "mongodb://localhost:27017";
-  const dbName = "demoproj";
-  const client = new MongoClient(mongoUrl, { useNewUrlParser: true });
+  const mongoUrl = "mongodb://localhost:27017"
+  
+  return MongoClient.connect(mongoUrl, { useNewUrlParser: true }).then((client) => {
+    console.log("Connected to Mongodb server")
+  
+    var collection = client.db("demoproj").collection("demodoc")
 
-  client.connect(function(err) {
-    assert.equal(null, err);
-    console.log("Connected to Mongodb server");
-    
-    const db = client.db(dbName);
-    
-    insertDocuments(db, function() {
-      findDocuments(db, function() {
-        client.close();
-      });
-    });
-  });
-}
+    return collection.insertMany([{ a : 1 }, { a : 2 }, { a : 3 } ]).then((result) => {
+      assert.equal(3, result.result.n)
+      assert.equal(3, result.ops.length)
 
-const insertDocuments = function(db, callback) {
-  const collection = db.collection("demodoc");
+      console.log("Inserted 3 docs into collection")
 
-  collection.insertMany([
-    { a : 1 }, { a : 2 }, { a : 3 }
-  ], function(err, result) {
-    assert.equal(err, null);
-    assert.equal(3, result.result.n);
-    assert.equal(3, result.ops.length);
-
-    console.log("Inserted 3 docs into the collection");
-    callback(result);
-  });
-}
-
-const findDocuments = function(db, callback) {
-  const collection = db.collection("demodoc");
-
-  collection.find({}).toArray(function(err, docs) {
-    assert.equal(err, null);
-
-    console.log("Records Found:");
-    console.log(docs);
-    callback(docs);
-  });
+      return collection.find({}).toArray()
+    }).catch((error)  => console.log(error.message))
+  }).catch(error => console.log(error.message))
 }
 
 const getUrlParam = function(rawParams, paramName) {
   return rawParams.map(rawParam => rawParam.split("=")).
-    find(param => param[0] === paramName)[1];
+    find(param => param[0] === paramName)[1]
 }
 
 const parrot = function(content) {
