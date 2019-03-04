@@ -2,7 +2,6 @@ var http = require("http")
 var https = require("https")
 var url = require("url")
 var fs = require("fs")
-const assert = require("assert")
 var characters = require("./swagger-specs/star-wars.json")
 
 const httpsOptions = {
