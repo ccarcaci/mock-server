@@ -2,7 +2,7 @@ var http = require("http")
 var https = require("https")
 var url = require("url")
 var fs = require("fs")
-var characters = require("./swagger-specs/star-wars.json")
+var characters = require("./mocks/star-wars.json")
 
 const httpsOptions = {
   key: fs.readFileSync(`${__dirname}/certs/privkey.pem`),
