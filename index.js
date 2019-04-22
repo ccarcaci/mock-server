@@ -1,16 +1,16 @@
-var http = require("http")
-var https = require("https")
-var url = require("url")
-var fs = require("fs")
-var characters = require("./mocks/star-wars.json")
+const http = require("http")
+const https = require("https")
+const url = require("url")
+const fs = require("fs")
+const characters = require("./mocks/star-wars.json")
 
 const httpsOptions = {
   key: fs.readFileSync(`${__dirname}/certs/privkey.pem`),
   cert: fs.readFileSync(`${__dirname}/certs/certificate.crt`),
 }
 
-var httpPort = 8080
-var httpsPort = 4443
+const httpPort = 8080
+const httpsPort = 4443
 
 const routing = (request, response) => {
   const action = url.parse(request.url)
@@ -32,8 +32,8 @@ const routing = (request, response) => {
   }
 }
 
-var httpServer = http.createServer((req, res) => routing(req, res))
-var httpsServer = https.createServer(httpsOptions, (req, res) => routing(req, res))
+const httpServer = http.createServer((req, res) => routing(req, res))
+const httpsServer = https.createServer(httpsOptions, (req, res) => routing(req, res))
 
 httpServer.listen(httpPort, () => { console.log(`HTTP Server on port ${httpPort}`) } )
 httpsServer.listen(httpsPort, () => { console.log(`HTTPS Server on port ${httpsPort}`) })
