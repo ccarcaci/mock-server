@@ -19,16 +19,22 @@ const routing = (request, response) => {
 		response.writeHead(200, { "Content-Type": "text/plain" })
     response.write("Try with /characters")
     response.end()
+
+    return
 	} else if(action.pathname === "/characters") {
 		response.writeHead(200, { "Content-Type": "application/json" })
     response.write(JSON.stringify(characters))
     response.end()
+
+    return
   } else if(action.pathname === "/parrot") {
     const content = getUrlParam(action.query.split("&"), "content")
 
     response.writeHead(200, { "Content-Type": "application/json" })
     response.write(JSON.stringify(parrot(content)))
     response.end()
+
+    return
   }
 }
 
