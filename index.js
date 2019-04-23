@@ -9,7 +9,7 @@ const httpsOptions = {
   cert: fs.readFileSync(`${__dirname}/certs/certificate.crt`),
 }
 
-const httpPort = 8080
+const httpPort = 3000
 const httpsPort = 4443
 
 const routing = (request, response) => {
@@ -36,6 +36,9 @@ const routing = (request, response) => {
 
     return
   }
+
+  response.writeHead(404)
+  response.end()
 }
 
 const httpServer = http.createServer((req, res) => routing(req, res))
