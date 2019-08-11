@@ -12,7 +12,7 @@ const httpsOptions = {
 const httpPort = 3000
 const httpsPort = 4443
 
-const routing = (request, response) => {
+const routing = async (request, response) => {
   const action = url.parse(request.url)
 
 	if(action.pathname === "/") {
@@ -27,8 +27,16 @@ const routing = (request, response) => {
     response.end()
 
     return
-  } else if(action.pathname === "/parrot") {
+  } else if(request.method === "GET" && action.pathname === "/parrot") {
     const content = getUrlParam(action.query.split("&"), "content")
+
+    response.writeHead(200, { "Content-Type": "application/json" })
+    response.write(JSON.stringify(parrot(content)))
+    response.end()
+
+    return
+  } else if(request.method === "POST" && action.pathname === "/parrot") {
+    const content = await getBody(request)
 
     response.writeHead(200, { "Content-Type": "application/json" })
     response.write(JSON.stringify(parrot(content)))
@@ -49,13 +57,13 @@ httpsServer.listen(httpsPort, () => { console.log(`HTTPS Server on port ${httpsP
 
 // Server functions
 
-const getUrlParam = function(rawParams, paramName) {
+const getUrlParam = (rawParams, paramName) => {
   return rawParams.map(rawParam => rawParam.split("=")).
     find(param => param[0] === paramName)[1]
 }
-
-const parrot = function(content) {
-  return {
-    parrotSays: content
-  }
-}
+const parrot = (content) => ({ parrotSays: content })
+const getBody = (request) => new Promise((resolve) => {
+  var body = []
+  request.on("data", (chunk) => body+=chunk)
+  request.on("end", () => resolve(JSON.parse(body)))
+})
