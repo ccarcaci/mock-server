@@ -57,10 +57,8 @@ httpsServer.listen(httpsPort, () => { console.log(`HTTPS Server on port ${httpsP
 
 // Server functions
 
-const getUrlParam = (rawParams, paramName) => {
-  return rawParams.map(rawParam => rawParam.split("=")).
-    find(param => param[0] === paramName)[1]
-}
+const getUrlParam = (rawParams, paramName) => rawParams.map(rawParam => rawParam.split("="))
+  .find(param => param[0] === paramName)[1]
 const parrot = (content) => ({ parrotSays: content })
 const getBody = (request) => new Promise((resolve) => {
   var body = []
