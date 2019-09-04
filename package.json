@@ -6,11 +6,26 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "devstart": "nodemon index.js"
+    "devstart": "nodemon index.js",
+    "linter": "eslint --fix ./"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^1.18.7"
+    "nodemon": "^1.18.7",
+    "eslint": "^6.3.0",
+    "husky": "^3.0.5",
+    "lint-staged": "^9.2.5"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "npm run linter",
+      "git add ."
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
