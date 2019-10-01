@@ -27,8 +27,8 @@ const routing = (request, response) => {
 const httpServer = http.createServer((req, res) => routing(req, res))
 const httpsServer = https.createServer(httpsOptions, (req, res) => routing(req, res))
 
-httpServer.listen(httpPort, () => { console.log(`HTTP Server on port ${httpPort}`) } )
-httpsServer.listen(httpsPort, () => { console.log(`HTTPS Server on port ${httpsPort}`) })
+httpServer.listen(httpPort, () => console.log(`HTTP Server on port ${httpPort}`))
+httpsServer.listen(httpsPort, () => console.log(`HTTPS Server on port ${httpsPort}`))
 
 // Routing functions
 
