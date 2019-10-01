@@ -1,3 +1,5 @@
+"use strict"
+
 const http = require("http")
 const https = require("https")
 const url = require("url")
@@ -12,41 +14,14 @@ const httpsOptions = {
 const httpPort = 3000
 const httpsPort = 4443
 
-const routing = async (request, response) => {
+const routing = (request, response) => {
   const action = url.parse(request.url)
 
-  if(action.pathname === "/") {
-    response.writeHead(200, { "Content-Type": "text/plain", })
-    response.write("Try with /characters")
-    response.end()
-
-    return
-  } else if(action.pathname === "/characters") {
-    response.writeHead(200, { "Content-Type": "application/json", })
-    response.write(JSON.stringify(characters))
-    response.end()
-
-    return
-  } else if(request.method === "GET" && action.pathname === "/parrot") {
-    const content = getUrlParam(action.query.split("&"), "content")
-
-    response.writeHead(200, { "Content-Type": "application/json", })
-    response.write(JSON.stringify(parrot(content)))
-    response.end()
-
-    return
-  } else if(request.method === "POST" && action.pathname === "/parrot") {
-    const content = await getBody(request)
-
-    response.writeHead(200, { "Content-Type": "application/json", })
-    response.write(JSON.stringify(parrot(content)))
-    response.end()
-
-    return
-  }
-
-  response.writeHead(404)
-  response.end()
+  if(action.pathname === "/") { rootRoute(response) }
+  else if(action.pathname === "/characters") { charactersRoute(response) }
+  else if(request.method === "GET" && action.pathname === "/parrot") { parrotOnGetRoute(action, response) }
+  else if(request.method === "POST" && action.pathname === "/parrot") { parrotOnPostRoute(request, response) }
+  else { fallbackRoute(response) }
 }
 
 const httpServer = http.createServer((req, res) => routing(req, res))
@@ -54,6 +29,37 @@ const httpsServer = https.createServer(httpsOptions, (req, res) => routing(req, 
 
 httpServer.listen(httpPort, () => { console.log(`HTTP Server on port ${httpPort}`) } )
 httpsServer.listen(httpsPort, () => { console.log(`HTTPS Server on port ${httpsPort}`) })
+
+// Routing functions
+
+const rootRoute = (response) => {
+  response.writeHead(200, { "Content-Type": "text/plain", })
+  response.write("Try with /characters")
+  response.end()
+}
+const charactersRoute = (response) => {
+  response.writeHead(200, { "Content-Type": "application/json", })
+  response.write(JSON.stringify(characters))
+  response.end()
+}
+const parrotOnGetRoute = (action, response) => {
+  const content = getUrlParam(action.query.split("&"), "content")
+
+  response.writeHead(200, { "Content-Type": "application/json", })
+  response.write(JSON.stringify(parrot(content)))
+  response.end()
+}
+const parrotOnPostRoute = async (request, response) => {
+  const content = await getBody(request)
+
+  response.writeHead(200, { "Content-Type": "application/json", })
+  response.write(JSON.stringify(parrot(content)))
+  response.end()
+}
+const fallbackRoute = (response) => {
+  response.writeHead(404)
+  response.end()
+}
 
 // Server functions
 
