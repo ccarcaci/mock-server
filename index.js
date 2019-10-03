@@ -30,29 +30,29 @@ const httpsServer = https.createServer(httpsOptions, (req, res) => routing(req, 
 httpServer.listen(httpPort, () => console.log(`HTTP Server on port ${httpPort}`))
 httpsServer.listen(httpsPort, () => console.log(`HTTPS Server on port ${httpsPort}`))
 
-// Routing functions
+// Routing Functions
 
 const rootRoute = (response) => {
-  response.writeHead(200, { "Content-Type": "text/plain", })
+  response.writeHead(200, { "Content-Type": "text/plain" })
   response.write("Try with /characters")
   response.end()
 }
 const charactersRoute = (response) => {
-  response.writeHead(200, { "Content-Type": "application/json", })
+  response.writeHead(200, { "Content-Type": "application/json" })
   response.write(JSON.stringify(characters))
   response.end()
 }
 const parrotOnGetRoute = (action, response) => {
   const content = getUrlParam(action.query.split("&"), "content")
 
-  response.writeHead(200, { "Content-Type": "application/json", })
+  response.writeHead(200, { "Content-Type": "application/json" })
   response.write(JSON.stringify(parrot(content)))
   response.end()
 }
 const parrotOnPostRoute = async (request, response) => {
   const content = await getBody(request)
 
-  response.writeHead(200, { "Content-Type": "application/json", })
+  response.writeHead(200, { "Content-Type": "application/json" })
   response.write(JSON.stringify(parrot(content)))
   response.end()
 }
@@ -61,11 +61,11 @@ const fallbackRoute = (response) => {
   response.end()
 }
 
-// Server functions
+// Server Functions
 
 const getUrlParam = (rawParams, paramName) => rawParams.map((rawParam) => rawParam.split("="))
   .find((param) => param[0] === paramName)[1]
-const parrot = (content) => ({ parrotSays: content, })
+const parrot = (content) => ({ parrotSays: content })
 const getBody = (request) => new Promise((resolve) => {
   let body = []
   request.on("data", (chunk) => body+=chunk)

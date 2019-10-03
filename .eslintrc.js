@@ -42,7 +42,7 @@ module.exports = {
     "no-process-env": "warn",
     "no-path-concat": "warn",
     "array-bracket-spacing": ["error", "always", { "singleValue": false }],
-    "comma-dangle": ["error", "always"],
+    "comma-dangle": ["error", "always-multiline" ],
     "comma-spacing": ["error", { "before": false, "after": true }],
     "comma-style": ["error", "last"],
     "eol-last": ["error", "always"],
