@@ -4,7 +4,7 @@
 
 Runtime hot loading
 
-# Node Mock Server
+# POC Node Http Server
 
 This project provides an easy and fast way to start writing Node code for Http Server. There are no dependencies, the implemented logic rely on Http internal library of Node ([https://nodejs.org/api/http.html](https://nodejs.org/api/http.html))
 
@@ -28,7 +28,7 @@ The ```index.js``` file provides some routes examples.
 The ```/parrot``` route replays the content passed as url params (GET) or as body param (POST).
 The ```/characters``` route provides a fixed JSON content.
 
-This mock example is inspired on Simple Design principles. [Take a look to them](https://www.agilealliance.org/glossary/simple-design).
+This POC is inspired on Simple Design principles. [Take a look to them](https://www.agilealliance.org/glossary/simple-design).
 
 ## License
 
