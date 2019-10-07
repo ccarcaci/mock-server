@@ -1,9 +1,3 @@
-## Libraries
-### Nodemon
-(https://nodemon.io/)
-
-Runtime hot loading
-
 # POC Node Http Server
 
 This project provides an easy and fast way to start writing Node code for Http Server. There are no dependencies, the implemented logic rely on Http internal library of Node ([https://nodejs.org/api/http.html](https://nodejs.org/api/http.html))
