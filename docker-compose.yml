@@ -1,0 +1,11 @@
+version: "3"
+services:
+  httpServerExample:
+    image: nodemon:local
+    command: nodemon --inspect=0.0.0.0 http-server/index.js
+    volumes:
+      - .:/http-server
+    ports:
+      - 3000
+      - 4443
+      - 9229
