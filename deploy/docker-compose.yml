@@ -4,8 +4,8 @@ services:
     image: nodemon:local
     command: nodemon --inspect=0.0.0.0 http-server/index.js
     volumes:
-      - .:/http-server
+      - ..:/http-server:ro
     ports:
-      - 3000
-      - 4443
-      - 9229
+      - 3000:3000
+      - 4443:4443
+      - 9229:9229

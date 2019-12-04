@@ -12,6 +12,31 @@ Run the server simply using npm:
 
 ```$ npm start```
 
+### Run Using Docker Container
+
+The project is provided with docker-compose definition that enables containerization.
+
+That containerization has remote debugging features built-in.
+To run and stop it, it is possible to use the two scripts:
+
+```./run.sh```
+```./stop.sh```
+
+To debug the application in his containerized version using VSCode is possible to add this debugging configuration to your local launch.json file:
+
+```json
+{
+  "type": "node",
+  "request": "attach",
+  "name": "Node Http Server - Docker Compose",
+  "address": "localhost",
+  "port": 9229,
+  "localRoot": "${workspaceFolder}/path/to/poc-node-http-server",
+  "remoteRoot": "/http-server",
+  "protocol": "inspector",
+},
+```
+
 ## Internal structure
 
 This project provides either Http and Https routes that serve some basic example of API.
