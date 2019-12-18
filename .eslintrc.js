@@ -2,7 +2,8 @@ module.exports = {
   env: {
     browser: true,
     commonjs: true,
-    jest: true
+    jest: true,
+    es6: true
   },
   extends: "eslint:recommended",
   globals: {
@@ -46,7 +47,7 @@ module.exports = {
     "comma-style": ["error", "last"],
     "eol-last": ["error", "always"],
     "func-call-spacing": ["error", "never"],
-    "id-length": ["error"],
+    "id-length": ["error", { "exceptions": [ "_" ] }],
     "implicit-arrow-linebreak": ["error", "beside"],
     "jsx-quotes": ["error", "prefer-double"],
     "max-depth": ["warn", 3],

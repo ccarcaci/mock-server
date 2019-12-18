@@ -7,7 +7,9 @@ const fs = require("fs")
 const characters = require("./mocks/star-wars.json")
 
 const httpsOptions = {
+  // eslint-disable-next-line no-undef
   key: fs.readFileSync(`${__dirname}/certs/privkey.pem`),
+  // eslint-disable-next-line no-undef
   cert: fs.readFileSync(`${__dirname}/certs/certificate.crt`),
 }
 
